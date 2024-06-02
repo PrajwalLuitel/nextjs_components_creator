@@ -1,20 +1,49 @@
+from typing import Any
 import requests
 from private_variables import *
 
 
-class CreateComponentContent():
-    url = "https://open-ai21.p.rapidapi.com/qa"
+context = """
+You are a professional web developer and you are creating a web application using NextJs. You have a bunch of pre built components which can be reused to create the required application for the client. The client has some requirements and provides his requirement and asks questions. According to that, you've got to firstly identify the required components and then modify the content inside those components to match the user requirements.
+"""
 
-    payload = {
-        "question": "tell body length of cheetah",
-        "context": "The cheetah (Acinonyx jubatus) is a large cat native to Africa, central Iran and India (where it was reintroduced in 2022 after becoming extinct in the country in the 1950s). The cheetah is the fastest land animal, capable of running at 80 to 98 km/h (50 to 61 mph); as such, it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail. It typically reaches 67 to 94 cm (26 to 37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). Its head is small and rounded, with a short snout and black tear-like facial streaks. The coat is typically tawny to creamy white or pale buff and is mostly covered with evenly spaced, solid black spots. Four subspecies are recognised. This photograph, taken in the Okavango Delta in Botswana, shows two young cheetah brothers grooming each other after feeding."
-    }
-    headers = {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": RAPID_API_KEY,
-        "X-RapidAPI-Host": RAPID_API_HOST
-    }
+class CreateComponentContent:
 
-    response = requests.post(url, json=payload, headers=headers)
+    def __call__(self, components, user_prompt) -> Any:
 
-    print(response.json())
+        url = "https://open-ai21.p.rapidapi.com/qa"
+
+        payload = {
+            "question": f"Select the required components from the below as per the user requirement : \nComponents that you have: {components}, \nUser requirement: {user_prompt}\n\nPlease return a python list and no any additional texts.",
+            "context": context
+                }
+        
+        headers = {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": RAPID_API_KEY,
+            "X-RapidAPI-Host": RAPID_API_HOST
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        print(response.json())
+
+
+
+class GetRelevantComponents:
+    def __call__(self, component_name, component_content, user_prompt) -> Any:
+        url = "https://open-ai21.p.rapidapi.com/qa"
+
+        payload = {
+            "question": f"Following is one of the components required for the application. Please modify the component to meet the user requirement. Do not add any additional feature as it is a {component_name}. Just modify the text elements and do nothing else. Do not return any extra words as well. \n\nThe component content: {component_content}\n\nUser requirement:{user_prompt}",
+            "context": context
+            }
+        headers = {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": RAPID_API_KEY,
+            "X-RapidAPI-Host": RAPID_API_HOST
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        print(response.json())
