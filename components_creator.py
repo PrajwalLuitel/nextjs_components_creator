@@ -1,6 +1,7 @@
 import os
 import shutil
 from private_variables import *
+from gpt_components_filder import main as gpt_components_main
 
 
 def copy_components(components, source_dir, target_dir):
@@ -26,7 +27,8 @@ def main():
 
 
     # Now, since the required components are copied, They should be edited according to the user prompt
-    
+    gpt_components_main()
+
 
 if __name__ == "__main__":
     main()
