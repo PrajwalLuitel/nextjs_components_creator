@@ -1,7 +1,7 @@
 import os
 import shutil
 from private_variables import *
-from gpt_components_filder import main as gpt_components_main
+# from gpt_components_filder import main as gpt_components_main
 from utils import GetRelevantComponents, CreateComponentContent
 
 
@@ -50,10 +50,10 @@ def main():
 
     # Now, for every component, we've got to generate new content as per the user prompt
     for component in relevant_components:
-        file_content = get_file_content(target_dir+component+f"/{component}.jsx")
+        file_content = get_file_content(target_dir+"/"+component+f"/{component}.tsx")
         new_content_with_context = get_relevant_content(component, file_content, user_prompt)
         
-        with open(target_dir+component+f"/{component}.jsx", "w") as file:
+        with open(target_dir+"/"+component+f"/{component}.tsx", "w") as file:
             file.write(new_content_with_context)
             print(f"Written into {component} successfully !")
         file.close()
