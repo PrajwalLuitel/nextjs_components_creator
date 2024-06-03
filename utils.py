@@ -1,6 +1,7 @@
 from typing import Any
 import requests
 from private_variables import *
+import re
 
 
 context = """
@@ -25,8 +26,20 @@ class CreateComponentContent:
         }
 
         response = requests.post(url, json=payload, headers=headers)
+        
+        raw_result = response.json()['result']
 
-        print(response.json())
+        pattern = r'\[([^\]]*)\]'
+        match = re.search(pattern, raw_result)
+
+        grouped_match = match.group(1)
+
+        splitted_match = grouped_match.split(",")
+
+        final_result = [el.split("'") for el in splitted_match]
+        
+        return final_result
+
 
 
 
@@ -35,7 +48,16 @@ class GetRelevantComponents:
         url = "https://open-ai21.p.rapidapi.com/qa"
 
         payload = {
-            "question": f"Following is one of the components required for the application. Please modify the component to meet the user requirement. Do not add any additional feature as it is a {component_name}. Just modify the text elements and do nothing else. Do not return any extra words as well. \n\nThe component content: {component_content}\n\nUser requirement:{user_prompt}",
+            "question": f"""Following is one of the components required for the application. 
+            Do not modify the code as it is just a {component_name}. 
+            Just modify the text elements such that a {component_name} would look like and do nothing else. Do not return any extra words as well. 
+            
+            The component content: {component_content}
+            
+            User requirement:{user_prompt}. 
+            
+            No extra word except the code.
+            """,
             "context": context
             }
         headers = {
@@ -46,4 +68,4 @@ class GetRelevantComponents:
 
         response = requests.post(url, json=payload, headers=headers)
 
-        print(response.json())
+        return response.json()['result']
