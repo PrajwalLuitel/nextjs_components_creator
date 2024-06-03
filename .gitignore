@@ -5,6 +5,7 @@ __pycache__/
 
 private_variables.py
 test.py
+nextjs_custom_application
 
 # C extensions
 *.so
