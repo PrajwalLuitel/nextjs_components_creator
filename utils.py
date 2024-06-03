@@ -8,14 +8,19 @@ context = """
 You are a professional web developer and you are creating a web application using NextJs. You have a bunch of pre built components which can be reused to create the required application for the client. The client has some requirements and provides his requirement and asks questions. According to that, you've got to firstly identify the required components and then modify the content inside those components to match the user requirements.
 """
 
-class CreateComponentContent:
+class GetRelevantComponents:
 
     def __call__(self, components, user_prompt) -> Any:
 
         url = "https://open-ai21.p.rapidapi.com/qa"
 
         payload = {
-            "question": f"Select the required components from the below as per the user requirement : \nComponents that you have: {components}, \nUser requirement: {user_prompt}\n\nPlease return a python list and no any additional texts.",
+            "question": f"""Select the required components from the below as per the user requirement. Just select from the available ones and do not add anything. 
+
+            Components that you have: {components}, 
+            User requirement: {user_prompt}
+            
+            Please return the output in a python list format and no any additional texts.""",
             "context": context
                 }
         
@@ -36,14 +41,14 @@ class CreateComponentContent:
 
         splitted_match = grouped_match.split(",")
 
-        final_result = [el.split("'") for el in splitted_match]
+        final_result = [el.strip("'") for el in splitted_match]
         
         return final_result
 
 
 
 
-class GetRelevantComponents:
+class CreateComponentContent:
     def __call__(self, component_name, component_content, user_prompt) -> Any:
         url = "https://open-ai21.p.rapidapi.com/qa"
 
