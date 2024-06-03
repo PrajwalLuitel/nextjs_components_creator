@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 private_variables.py
-
+test.py
 
 # C extensions
 *.so
