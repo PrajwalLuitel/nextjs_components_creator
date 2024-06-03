@@ -17,7 +17,8 @@ def copy_components(components, source_dir, target_dir):
 
 def get_relevant_components(all_components, user_prompt):
     components_selector = GetRelevantComponents()
-    return components_selector(all_components, user_prompt)
+    selected_components = components_selector(all_components,user_prompt)
+    return [component for component in selected_components if component in all_components]
     
 
 def get_relevant_content(component_name, component_content, user_prompt):
@@ -34,10 +35,10 @@ def get_file_content(filename):
 
 def main():
     # Currently asking components, but will analyze the contents of the user prompt and generate components
-    user_prompt = input("Enter the components required (comma-separated): ")
+    user_prompt = input("Enter your requirement for the website please: ")
     all_components = os.listdir('all_components')
 
-    relevant_components = get_relevant_components(all_components, user_prompt)
+    relevant_components = get_relevant_components(all_components=all_components, user_prompt=user_prompt)
 
 
     # Define the source and target directories
